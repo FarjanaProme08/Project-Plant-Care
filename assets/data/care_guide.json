@@ -1,0 +1,37 @@
+[
+  {
+    "id": "cg_1",
+    "species": "Monstera Deliciosa",
+    "instructions": "Water every 1-2 weeks, allowing soil to dry out between waterings. Expect to water more often in brighter light and less often in lower light.",
+    "sunlightRequirements": "Bright, indirect light.",
+    "toxicityWarnings": "Toxic to cats and dogs if ingested."
+  },
+  {
+    "id": "cg_2",
+    "species": "Snake Plant (Sansevieria)",
+    "instructions": "Allow soil to dry completely between waterings. Very drought tolerant.",
+    "sunlightRequirements": "Low to bright indirect light.",
+    "toxicityWarnings": "Mildly toxic to pets."
+  },
+  {
+    "id": "cg_3",
+    "species": "Pothos",
+    "instructions": "Water every 1-2 weeks, allowing soil to dry out halfway down between waterings.",
+    "sunlightRequirements": "Low to medium indirect light.",
+    "toxicityWarnings": "Toxic to pets."
+  },
+  {
+    "id": "cg_4",
+    "species": "Fiddle Leaf Fig",
+    "instructions": "Water every 1-2 weeks, allowing soil to dry out between waterings.",
+    "sunlightRequirements": "Bright, indirect light.",
+    "toxicityWarnings": "Mildly toxic to pets."
+  },
+  {
+    "id": "cg_5",
+    "species": "ZZ Plant",
+    "instructions": "Water every 2-3 weeks, allowing soil to dry completely. Highly drought-resistant.",
+    "sunlightRequirements": "Low to bright indirect light.",
+    "toxicityWarnings": "Toxic to pets and humans if ingested."
+  }
+]
