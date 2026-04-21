@@ -34,6 +34,9 @@ class Plant extends HiveObject {
   @HiveField(9)
   DateTime? nextFertilizerDate;
 
+  @HiveField(10)
+  String? ownerEmail;
+
   Plant({
     required this.id,
     required this.name,
@@ -45,5 +48,6 @@ class Plant extends HiveObject {
     required this.nextWaterDate,
     this.nextMistDate,
     this.nextFertilizerDate,
+    this.ownerEmail,
   });
 }

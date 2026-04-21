@@ -25,8 +25,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<AuthProvider, PlantProvider>(
           create: (_) => PlantProvider(dbService, notificationService),
+          update: (_, auth, plant) => plant!..updateUser(auth.currentUserEmail),
         ),
       ],
       child: const PlantCareApp(),
