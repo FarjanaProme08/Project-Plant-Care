@@ -4,10 +4,8 @@ import 'package:provider/provider.dart';
 import 'services/db_service.dart';
 import 'services/notification_service.dart';
 import 'providers/plant_provider.dart';
-import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/dashboard_screen.dart';
-import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +22,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProxyProvider<AuthProvider, PlantProvider>(
-          create: (_) => PlantProvider(dbService, notificationService),
-          update: (_, auth, plant) => plant!..updateUser(auth.currentUserEmail),
-        ),
+        ChangeNotifierProvider(create: (_) => PlantProvider(dbService, notificationService)),
       ],
       child: const PlantCareApp(),
     ),
@@ -40,8 +34,8 @@ class PlantCareApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ThemeProvider, AuthProvider>(
-      builder: (context, themeProvider, authProvider, child) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
         return MaterialApp(
           title: 'Urban Houseplant Care',
           debugShowCheckedModeBanner: false,
@@ -73,9 +67,7 @@ class PlantCareApp extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
           ),
-          home: authProvider.isAuthenticated
-              ? const DashboardScreen()
-              : const LoginScreen(),
+          home: const DashboardScreen(),
         );
       },
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
 import '../services/db_service.dart';
 
@@ -10,7 +9,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
@@ -19,21 +17,6 @@ class SettingsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         children: [
           const SizedBox(height: 16),
-          const CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50)),
-          const SizedBox(height: 16),
-          Text(
-            authProvider.currentUserName ?? 'User',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          Text(
-            authProvider.currentUserEmail ?? 'No email',
-            textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
-          ),
-          const SizedBox(height: 32),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.dark_mode),
@@ -84,17 +67,6 @@ class SettingsScreen extends StatelessWidget {
                     const SnackBar(content: Text('All local data cleared.')),
                   );
                 }
-              }
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () async {
-              await authProvider.logout();
-              if (context.mounted) {
-                Navigator.popUntil(context, (route) => route.isFirst);
               }
             },
           ),

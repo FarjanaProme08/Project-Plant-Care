@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 import 'dart:io';
 
 import '../providers/plant_provider.dart';
+import '../services/care_guide_service.dart';
 import 'add_edit_plant_screen.dart';
+import 'care_guide_detail_screen.dart';
 
 class PlantDetailScreen extends StatelessWidget {
   final String plantId;
@@ -82,6 +84,8 @@ class PlantDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       _buildInfoCard(context, plant),
+                      const SizedBox(height: 12),
+                      _buildCareGuideBanner(context, plant.species),
                       const SizedBox(height: 24),
                       Text(
                         'Care History',
@@ -231,6 +235,70 @@ class PlantDetailScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCareGuideBanner(BuildContext context, String species) {
+    final service = CareGuideService();
+    // We fire initState asynchronously but for this banner we do a synchronous
+    // lookup — so we pre-load lazily. Wrap in FutureBuilder.
+    return FutureBuilder<List<dynamic>>(
+      future: service.loadOfflineGuides(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox.shrink();
+        final guide = service.findForSpecies(species);
+        if (guide == null) return const SizedBox.shrink();
+        final cs = Theme.of(context).colorScheme;
+        return Card(
+          elevation: 0,
+          color: cs.primaryContainer.withValues(alpha: 0.7),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CareGuideDetailScreen(
+                    guide: guide, service: service),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              child: Row(
+                children: [
+                  Text(guide.emoji,
+                      style: const TextStyle(fontSize: 30)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'View Care Guide',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: cs.onPrimaryContainer,
+                          ),
+                        ),
+                        Text(
+                          guide.commonName,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: cs.onPrimaryContainer.withValues(alpha: 0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 14, color: cs.onPrimaryContainer),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

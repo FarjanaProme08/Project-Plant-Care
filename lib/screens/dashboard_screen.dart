@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import '../providers/plant_provider.dart';
-import '../providers/auth_provider.dart';
 import 'plant_list_screen.dart';
 import 'care_guide_screen.dart';
 import 'add_edit_plant_screen.dart';
@@ -30,8 +29,8 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer2<PlantProvider, AuthProvider>(
-        builder: (context, provider, authProvider, child) {
+      body: Consumer<PlantProvider>(
+        builder: (context, provider, child) {
           final tasks = provider.getUpcomingTasks();
 
           return SingleChildScrollView(
@@ -39,7 +38,7 @@ class DashboardScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildStatsSummary(context, provider, authProvider),
+                _buildStatsSummary(context, provider),
                 const SizedBox(height: 24),
                 _buildQuickActions(context),
                 const SizedBox(height: 24),
@@ -66,7 +65,6 @@ class DashboardScreen extends StatelessWidget {
   Widget _buildStatsSummary(
     BuildContext context,
     PlantProvider provider,
-    AuthProvider authProvider,
   ) {
     int tasksDoneToday = 0;
     final now = DateTime.now();
@@ -101,7 +99,7 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hello, ${authProvider.currentUserName ?? 'Gardener'}! 🌿',
+                    'Hello, Gardener! 🌿',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

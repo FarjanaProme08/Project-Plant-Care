@@ -11,7 +11,6 @@ class PlantProvider with ChangeNotifier {
   final CareScheduler _careScheduler;
 
   List<Plant> _plants = [];
-  String? _currentUserEmail;
   
   List<Plant> get plants => _plants;
 
@@ -20,37 +19,12 @@ class PlantProvider with ChangeNotifier {
     _loadPlants();
   }
 
-  void updateUser(String? email) {
-    if (_currentUserEmail != email) {
-      _currentUserEmail = email;
-      _loadPlants();
-    }
-  }
-
   void _loadPlants() {
-    if (_currentUserEmail == null) {
-      _plants = [];
-    } else {
-      final allPlants = _dbService.getAllPlants();
-      
-      // Filter by owner and handle migration for ownerless plants
-      _plants = [];
-      for (var plant in allPlants) {
-        if (plant.ownerEmail == _currentUserEmail) {
-          _plants.add(plant);
-        } else if (plant.ownerEmail == null) {
-          // Migration: claim ownerless plants for the current user
-          plant.ownerEmail = _currentUserEmail;
-          _dbService.updatePlant(plant);
-          _plants.add(plant);
-        }
-      }
-    }
+    _plants = _dbService.getAllPlants();
     notifyListeners();
   }
 
   Future<void> addPlant(Plant plant) async {
-    plant.ownerEmail = _currentUserEmail;
     await _dbService.addPlant(plant);
     await _careScheduler.scheduleAllCareForPlant(plant);
     _loadPlants();
