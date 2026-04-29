@@ -5,7 +5,9 @@ import 'services/db_service.dart';
 import 'services/notification_service.dart';
 import 'providers/plant_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/auth_provider.dart';
 import 'screens/dashboard_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +23,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => PlantProvider(dbService, notificationService)),
+        ChangeNotifierProvider(
+          create: (context) => PlantProvider(
+            dbService,
+            notificationService,
+          ),
+        ),
       ],
       child: const PlantCareApp(),
     ),
@@ -67,7 +75,14 @@ class PlantCareApp extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
           ),
-          home: const DashboardScreen(),
+          home: Consumer<AuthProvider>(
+            builder: (context, auth, _) {
+              if (auth.isAuthenticated) {
+                return const DashboardScreen();
+              }
+              return const LoginScreen();
+            },
+          ),
         );
       },
     );

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../providers/theme_provider.dart';
+import '../providers/auth_provider.dart';
 import '../services/db_service.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -67,6 +69,17 @@ class SettingsScreen extends StatelessWidget {
                     const SnackBar(content: Text('All local data cleared.')),
                   );
                 }
+              }
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () async {
+              await Provider.of<AuthProvider>(context, listen: false).logout();
+              if (context.mounted) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
               }
             },
           ),
