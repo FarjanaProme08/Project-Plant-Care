@@ -4,6 +4,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 
+
 class NotificationService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -36,10 +37,12 @@ class NotificationService {
     if (kIsWeb) return;
 
     if (Platform.isAndroid) {
-      await _notificationsPlugin
+      final androidImplementation = _notificationsPlugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.requestNotificationsPermission();
+              AndroidFlutterLocalNotificationsPlugin>();
+      
+      await androidImplementation?.requestNotificationsPermission();
+      await androidImplementation?.requestExactAlarmsPermission();
     } else if (Platform.isIOS) {
       await _notificationsPlugin
           .resolvePlatformSpecificImplementation<
@@ -65,18 +68,29 @@ class NotificationService {
     final tz.TZDateTime tzScheduledDate =
         tz.TZDateTime.from(scheduledDate, tz.local);
 
-    const AndroidNotificationDetails androidDetails =
+    final AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-      'plant_care_channel_id',
-      'Plant Care Notifications',
+      'plant_care_reminders_channel_v2', // Changed ID to force new channel creation
+      'Plant Care Reminders',
       channelDescription: 'Notifications for plant watering and care tasks',
       importance: Importance.max,
       priority: Priority.high,
+      ticker: 'ticker',
+      playSound: true,
+      enableVibration: true,
+      vibrationPattern: Int64List.fromList([0, 500, 200, 500]), // Custom "Buzz" pattern
+      fullScreenIntent: true,
+      category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
     );
 
-    const NotificationDetails platformDetails = NotificationDetails(
+    final NotificationDetails platformDetails = NotificationDetails(
       android: androidDetails,
-      iOS: DarwinNotificationDetails(),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
     );
 
     await _notificationsPlugin.zonedSchedule(
@@ -87,10 +101,47 @@ class NotificationService {
       notificationDetails: platformDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
-    debugPrint("Notification Scheduled: \$title for \$scheduledDate");
+    debugPrint("Notification Scheduled: $title for $scheduledDate (Exact Mode)");
+  }
+
+  Future<void> showImmediateNotification({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    if (kIsWeb) return;
+
+    final AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      'plant_care_reminders_channel_v2',
+      'Plant Care Reminders',
+      channelDescription: 'Notifications for plant watering and care tasks',
+      importance: Importance.max,
+      priority: Priority.high,
+      enableVibration: true,
+      vibrationPattern: Int64List.fromList([0, 500, 200, 500]),
+    );
+
+    final NotificationDetails platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: const DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
+    );
+
+    await _notificationsPlugin.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: platformDetails,
+    );
+    debugPrint("Immediate Notification Showed: $title");
   }
 
   Future<void> cancelNotification(int id) async {
+
     if (kIsWeb) return;
     await _notificationsPlugin.cancel(id: id);
     debugPrint("Notification \$id cancelled");
