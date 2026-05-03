@@ -1,0 +1,71 @@
+============================================================
+           AI USAGE DECLARATION
+============================================================
+
+Name: Farjana Sadia Prome
+Student ID: 22301007
+Assignment: CSE 489 Project - Final Submission
+Date: May 3, 2026
+
+------------------------------------------------------------
+1. AI TOOLS USED (check all that apply)
+------------------------------------------------------------
+[ ] None
+[x] ChatGPT
+[ ] GitHub Copilot
+[x] Google Gemini
+[ ] Claude
+[ ] Cursor
+[x] Other: Antigravity AI Assistant
+
+------------------------------------------------------------
+2. PURPOSE OF AI USE (check all that apply)
+------------------------------------------------------------
+[x] Learning/understanding concepts
+[x] Debugging my code
+[x] Generating code snippets
+[x] Writing text content
+[x] Design/styling ideas
+[ ] Image generation
+[ ] Other: ________________
+
+------------------------------------------------------------
+3. DESCRIPTION OF AI USE
+------------------------------------------------------------
+Briefly describe what you used AI for and how:
+
+AI was used throughout the development process of the Urban Houseplant Care app. 
+Specifically, it helped in:
+- Designing the application architecture and implementing the Hive local database 
+  structure for offline data persistence.
+- Generating and refining the complex logic required for recurring notifications 
+  and care scheduling using the flutter_local_notifications package.
+- Debugging various errors related to Android manifest permissions and 
+  asynchronous task handling.
+- Structuring the final project report and documenting features.
+- Implementing the Gemini AI integration for the conversational care advice feature.
+
+------------------------------------------------------------
+4. AI-ASSISTED SECTIONS
+------------------------------------------------------------
+List specific files/sections where AI helped significantly:
+
+File: lib/services/notification_service.dart Section: Notification scheduling & initialization
+File: lib/screens/plant_detail_screen.dart Section: Care history logic & UI layout
+File: lib/main.dart Section: State management & Provider setup
+
+------------------------------------------------------------
+5. DECLARATION
+------------------------------------------------------------
+I declare that:
+- This disclosure is complete and accurate
+- I understand all code in my submission
+- I can explain and modify my work if asked
+- I take full responsibility for my submission
+
+Signature: Farjana Sadia Prome
+Date: May 3, 2026
+
+============================================================
+Save as: AI_Declaration.txt
+============================================================
