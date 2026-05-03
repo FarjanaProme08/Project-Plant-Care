@@ -10,7 +10,15 @@ import '../providers/plant_provider.dart';
 
 class AddEditPlantScreen extends StatefulWidget {
   final Plant? plant;
-  const AddEditPlantScreen({super.key, this.plant});
+  final String? initialSpecies;
+  final int? initialWaterDays;
+
+  const AddEditPlantScreen({
+    super.key,
+    this.plant,
+    this.initialSpecies,
+    this.initialWaterDays,
+  });
 
   @override
   State<AddEditPlantScreen> createState() => _AddEditPlantScreenState();
@@ -35,10 +43,18 @@ class _AddEditPlantScreenState extends State<AddEditPlantScreen> {
       _speciesController.text = widget.plant!.species;
       _waterController.text = widget.plant!.waterIntervalDays.toString();
       _mistController.text = widget.plant!.mistIntervalDays.toString();
-      _fertilizerController.text = widget.plant!.fertilizerIntervalDays
-          .toString();
+      _fertilizerController.text =
+          widget.plant!.fertilizerIntervalDays.toString();
       if (widget.plant!.imagePath != null) {
         _imageFile = File(widget.plant!.imagePath!);
+      }
+    } else {
+      if (widget.initialSpecies != null) {
+        _speciesController.text = widget.initialSpecies!;
+        _nameController.text = widget.initialSpecies!;
+      }
+      if (widget.initialWaterDays != null) {
+        _waterController.text = widget.initialWaterDays.toString();
       }
     }
   }

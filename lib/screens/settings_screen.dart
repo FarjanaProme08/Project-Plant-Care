@@ -4,7 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../providers/theme_provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/db_service.dart';
-import 'login_screen.dart';
+import '../services/notification_service.dart';
+
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -74,8 +75,28 @@ class SettingsScreen extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
+            leading: const Icon(Icons.notifications_active),
+            title: const Text('Test Notification Buzz'),
+            subtitle: const Text('Triggers a buzz notification instantly'),
+            onTap: () async {
+              final ns = NotificationService();
+              await ns.showImmediateNotification(
+                id: 999,
+                title: 'Plant Care Test 🌿',
+                body: 'The notification buzz is working perfectly!',
+              );
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Notification sent! Check your notification bar.')),
+                );
+              }
+            },
+          ),
+          const Divider(),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
+
             onTap: () async {
               await Provider.of<AuthProvider>(context, listen: false).logout();
               if (context.mounted) {

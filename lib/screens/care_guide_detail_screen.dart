@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/care_guide_entry.dart';
 import '../services/care_guide_service.dart';
+import 'add_edit_plant_screen.dart';
 
 class CareGuideDetailScreen extends StatefulWidget {
   final CareGuideEntry guide;
@@ -270,6 +271,28 @@ class _CareGuideDetailScreenState extends State<CareGuideDetailScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Try to extract a number from wateringFrequency (e.g. "7-10 days" -> 7)
+          final reg = RegExp(r'(\d+)');
+          final match = reg.firstMatch(g.wateringFrequency);
+          final waterDays = match != null ? int.parse(match.group(1)!) : 7;
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => AddEditPlantScreen(
+                initialSpecies: g.commonName,
+                initialWaterDays: waterDays,
+              ),
+            ),
+          );
+        },
+        label: const Text('Add to My Plants'),
+        icon: const Icon(Icons.add),
+        backgroundColor: cs.primary,
+        foregroundColor: cs.onPrimary,
       ),
     );
   }

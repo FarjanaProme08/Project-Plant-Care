@@ -7,6 +7,7 @@ import '../providers/plant_provider.dart';
 import '../services/care_guide_service.dart';
 import 'add_edit_plant_screen.dart';
 import 'care_guide_detail_screen.dart';
+import 'growth_diary_screen.dart';
 
 class PlantDetailScreen extends StatelessWidget {
   final String plantId;
@@ -85,6 +86,8 @@ class PlantDetailScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       _buildInfoCard(context, plant),
                       const SizedBox(height: 12),
+                      _buildGrowthDiaryButton(context, plant),
+                      const SizedBox(height: 12),
                       _buildCareGuideBanner(context, plant.species),
                       const SizedBox(height: 24),
                       Text(
@@ -132,6 +135,34 @@ class PlantDetailScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildGrowthDiaryButton(BuildContext context, plant) {
+    return Card(
+      elevation: 0,
+      color: Colors.green.shade50,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: BorderSide(color: Colors.green.shade200),
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.photo_library, color: Colors.green),
+        title: const Text(
+          'Plant Growth Diary',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+        ),
+        subtitle: const Text('Track growth with photos and notes'),
+        trailing: const Icon(Icons.chevron_right, color: Colors.green),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => GrowthDiaryScreen(plant: plant),
+            ),
+          );
+        },
+      ),
     );
   }
 

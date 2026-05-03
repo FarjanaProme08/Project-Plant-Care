@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../models/plant.dart';
 import '../models/care_history.dart';
+import '../models/growth_record.dart';
 import '../services/db_service.dart';
 import '../services/notification_service.dart';
 import '../services/care_scheduler.dart';
@@ -48,6 +49,16 @@ class PlantProvider with ChangeNotifier {
 
   List<CareHistory> getHistory(String plantId) {
     return _dbService.getHistoryForPlant(plantId);
+  }
+
+  // Growth Diary
+  List<GrowthRecord> getGrowthRecords(String plantId) {
+    return _dbService.getGrowthRecordsForPlant(plantId);
+  }
+
+  Future<void> addGrowthRecord(GrowthRecord record) async {
+    await _dbService.addGrowthRecord(record);
+    notifyListeners();
   }
 
   Future<void> markCareDone(Plant plant, String careType) async {

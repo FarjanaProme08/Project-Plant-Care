@@ -8,6 +8,12 @@ import 'care_guide_screen.dart';
 import 'add_edit_plant_screen.dart';
 import 'plant_detail_screen.dart';
 import 'settings_screen.dart';
+import 'ai_assistant_screen.dart';
+import 'marketplace_screen.dart';
+import 'package:image_picker/image_picker.dart';
+import '../services/ai_service.dart';
+import 'chat_list_screen.dart';
+import 'dart:io';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -119,28 +125,124 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildQuickActions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Column(
       children: [
-        _buildActionCard(
-          context,
-          icon: Icons.local_florist,
-          label: 'My Plants',
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const PlantListScreen()),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildActionCard(
+              context,
+              icon: Icons.local_florist,
+              label: 'My Plants',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PlantListScreen()),
+              ),
+            ),
+            _buildActionCard(
+              context,
+              icon: Icons.storefront,
+              label: 'Marketplace',
+              color: Colors.orange.shade400,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MarketplaceScreen()),
+              ),
+            ),
+          ],
         ),
-        _buildActionCard(
-          context,
-          icon: Icons.menu_book,
-          label: 'Care Guide',
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const CareGuideScreen()),
-          ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildActionCard(
+              context,
+              icon: Icons.psychology,
+              label: 'AI Expert',
+              color: Colors.purple.shade400,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AiAssistantScreen()),
+              ),
+            ),
+            _buildActionCard(
+              context,
+              icon: Icons.camera_alt,
+              label: 'Identify',
+              color: Colors.blue.shade400,
+              onTap: () => _showAiIdentifyDialog(context),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildActionCard(
+              context,
+              icon: Icons.chat,
+              label: 'Chats',
+              color: Colors.teal.shade400,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ChatListScreen()),
+              ),
+            ),
+            _buildActionCard(
+              context,
+              icon: Icons.menu_book,
+              label: 'Care Guide',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CareGuideScreen()),
+              ),
+            ),
+          ],
         ),
       ],
+    );
+  }
+
+  void _showAiIdentifyDialog(BuildContext context) async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.camera);
+    if (image == null) return;
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('AI is identifying your plant...'),
+          ],
+        ),
+      ),
+    );
+
+    final aiService = AiService();
+    final result = await aiService.identifyPlant(File(image.path));
+
+    if (!context.mounted) return;
+    Navigator.pop(context); // Close loading dialog
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Identification Result'),
+        content: Text(result['result'] ?? result['error'] ?? 'No result'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -149,6 +251,7 @@ class DashboardScreen extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    Color? color,
   }) {
     return Expanded(
       child: GestureDetector(
@@ -162,7 +265,7 @@ class DashboardScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
               children: [
-                Icon(icon, size: 40, color: Theme.of(context).primaryColor),
+                Icon(icon, size: 40, color: color ?? Theme.of(context).primaryColor),
                 const SizedBox(height: 8),
                 Text(
                   label,
